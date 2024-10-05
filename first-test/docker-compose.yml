@@ -1,0 +1,11 @@
+version: '3'
+services:
+  static-site:
+    container_name: static-site
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/var/www/html/
+    ports:
+      - 8080:80

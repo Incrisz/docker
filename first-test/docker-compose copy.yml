@@ -1,0 +1,26 @@
+# Define the Docker Compose file version
+version: '3' 
+
+services:
+
+  # Name of your service
+  static-site:
+    
+    # Specify a custom container name  
+    container_name: static-site
+    
+    build:
+      
+      # Path to a directory containing a Dockerfile
+      context: . 
+      
+      # Specify the Dockerfile name (if it's not the default Dockerfile)
+      dockerfile: Dockerfile.apache2 
+    
+    # Mount host paths or named volumes. It maps the current directory on host to /var/www/html/ in the container
+    volumes:
+      - .:/var/www/html/
+     
+    # Expose ports, format as - <host_port>:<container_port>
+    ports:
+      - 8080:80

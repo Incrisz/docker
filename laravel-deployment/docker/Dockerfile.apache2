@@ -1,0 +1,15 @@
+# Use the ubuntu base image
+FROM ubuntu:20.04
+
+# Prevent dialog asking questions
+ARG DEBIAN_FRONTEND=noninteractive
+
+# Install apache2 and nano
+RUN apt-get update && \
+    apt-get install -y apache2 nano
+
+# Define the working directory
+WORKDIR /var/www/html/
+
+# Use apache2 in foreground mode
+CMD apachectl -D FOREGROUND

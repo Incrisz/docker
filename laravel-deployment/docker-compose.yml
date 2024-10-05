@@ -1,0 +1,31 @@
+version: '3'
+services:
+  apache2:
+    container_name: apache2
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.apache2
+    volumes:
+      - .:/var/www/html/
+    ports:
+      - 8080:80
+    
+  mysql:
+    container_name: sql
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.sql
+    volumes:  
+      - ./mysql-data:/var/lib/mysql
+    ports:
+      - 3306:3306
+
+
+
+
+
+
+
+      
+# docker run -it --rm sql /bin/bash
+# docker run -d sql mysqld
