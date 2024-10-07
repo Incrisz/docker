@@ -1,0 +1,62 @@
+version: '3'
+services:
+  apache2:
+    container_name: apache2
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.apache2
+    volumes:
+      - .:/var/www/html/
+    ports:
+      - 8080:80
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.apache2.rule=Host(`godwinincrisz.xyz`)"
+      - "traefik.http.routers.apache2.entrypoints=websecure"
+      - "traefik.http.routers.apache2.tls.certresolver=myresolver"
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  mysql:
+    container_name: sql
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.sql
+    volumes:  
+      - ./mysql-data:/var/lib/mysql
+      - ./mysql-conf:/etc/mysql   # Add this line
+    ports:
+      - 3306:3306
+      
+  reverse-proxy:
+    image: traefik:v3.1
+    command:
+      - "--providers.docker"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entryPoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.email=incrisz4luv@gmail.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - letsencrypt:/letsencrypt
+      - /var/run/docker.sock:/var/run/docker.sock
+
+volumes:
+  letsencrypt:
+
+
+
+
+
+
+
+
+
+
+
+# docker run -it --rm sql /bin/bash
+# docker run -d sql mysqld
